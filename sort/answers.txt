@@ -1,0 +1,11 @@
+sort1 uses: Bubble Sort
+
+How do you know?: It had the slowest speed in reversed lists, which is the worst case senario for Bubble sort having a complexity of (n^2).
+
+sort2 uses: Merge Sort
+
+How do you know?: It was the fastest in all lists except sorted lists(where Bubble sort was the fastest, with its best case senario and a complexity of (n)). It has almost indentical speeds in all lists. As merge sort has a complexity of (n log n) in best and worst senarios, we can confim its merge sort.
+
+sort3 uses: Selection Sort
+
+How do you know?: It had the slowest speed in all lists except reversed (where Bubble sort is the slowest). It is consistantly slower, i.e, has identical speed in all lists. As selection sort has a best case and worst case complexity of (n^2), it will have identical slower speeds in the tests. Hence we can conform its Selection sort.
