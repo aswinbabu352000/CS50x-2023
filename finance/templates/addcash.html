@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add Money
+{% endblock %}
+{% block main %}
+    <form action="/addcash" method="post">
+        <div class="mb-3">
+            <h5>Current Cash = "{{ usd(cash) }}"</h5>
+        </div>
+
+        <div class="mb-3">
+            <label for="symbol">Enter Amount</label>
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" type="text" placeholder="E.g. 100 for $100.00" autofocus autocorrect="off" name="addcash" id="addcash">
+        </div>
+        <button type="submit" class="btn btn-primary">+Add</button>
+    </form>
+{% endblock %}

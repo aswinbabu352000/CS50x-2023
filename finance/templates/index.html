@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <div class="container">
+        <table class="table portfolio">
+            <tr>
+                <th class="text-start">Symbol</th>
+                <th class="text-start">Name</th>
+                <th class="text-end">Shares</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Total</th>
+            </tr>
+
+            {% for row in owned %}
+
+                {% set price =  lookup(row.symbol)["price"] %}
+                {% set total =  0 %}
+                {% set total =  (total + (price * row.shares)) %}
+
+                <tr>
+                    <td class="text-start">{{ row.symbol }}</td>
+                    <td class="text-start">{{ row.name }}</td>
+                    <td class="text-end">{{ row.shares }}</td>
+                    <td class="text-end">{{ usd(price) }}</td>
+                    <td class="text-end">{{ usd(price * row.shares) }}</td>
+                </tr>
+
+            {% endfor %}
+            <tr class="text-end">
+                <td colspan=4><b>Cash</b></td>
+                <td>{{ usd(cash) }}</td>
+            </tr>
+            <tr class="text-end">
+                <td colspan=4><b>TOTAL</b></td>
+                <td>{{ total }}</td>
+            </tr>
+        </table>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <div class="container">
+        <table class="table table-hover">
+            <tr>
+                <th class="text-start">Type</th>
+                <th class="text-start">Symbol</th>
+                <th>Shares</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Total</th>
+                <th class="text-end">Transacted</th>
+            </tr>
+            {% for row in transactions %}
+                {% if row.type == 's' %}
+                    {% set text = 'text-success' %}
+                    {% set trans = 'Sold' %}
+                {% else %}
+                    {% set text = 'text-danger' %}
+                    {% set trans = 'Bought' %}
+                {% endif %}
+                <tr class="{{ text }}">
+                    <td class="text-start">{{ trans }}</td>
+                    <td class="text-start">{{ row.symbol }}</td>
+                    <td class="text-start">{{ row.shares }}</td>
+                    <td class="text-end">{{ usd(row.trnsprice) }}</td>
+                    <td class="text-end">{{ usd(row.trnsprice * row.shares) }}</td>
+                    <td class="text-end">{{ row.transacted }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}

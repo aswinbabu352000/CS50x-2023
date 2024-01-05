@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <div class="card text-bg-secondary mx-auto" style="max-width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title"><b>{{ result["name"] }}</b></h5>
+            <h5 class="card-title"><b>{{ usd(result["price"]) }}</b></h5>
+        </div>
+    </div>
+{% endblock %}

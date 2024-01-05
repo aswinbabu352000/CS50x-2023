@@ -1,0 +1,106 @@
+body {
+    background-color: #f8f9fa;
+}
+
+
+h1,
+h2 {
+    color: #007bff;
+}
+
+img.rounded {
+    border-radius: 50%;
+}
+
+ul.list-group {
+    margin-top: 10px;
+}
+
+address {
+    font-style: normal;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+
+
+}
+
+body {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+
+}
+
+
+#title {
+    font-size: 100px;
+    font-weight: 1000;
+}
+
+#tagline {
+    font-size: 50px;
+    font-weight: 1000;
+}
+
+
+
+#passion-heading {
+    font-size: 100px;
+    font-weight: 700;
+}
+
+.passion {
+
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.desc {
+    height: 50vh;
+    width: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 5%;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.desc h1 {
+    font-size: 50px;
+    font-weight: 1000;
+}
+
+.desc p {
+    text-indent: 40px;
+    text-align: left;
+    font-size: 120%;
+    font-weight: 700;
+}
+
+.img {
+    height: 50vh;
+    width: 50vh;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+
+.img:hover {
+    transform: scale(1.05);
+}
+
+.desc:hover {
+    transform: scale(1.05);
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}

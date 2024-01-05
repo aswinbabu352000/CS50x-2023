@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, width=device-width">
+
+        <!-- http://getbootstrap.com/docs/5.1/ -->
+        <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
+        <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"></script>
+
+        <!-- https://favicon.io/emoji-favicons/money-bag/ -->
+        <link href="/static/favicon.ico" rel="icon">
+
+        <!--https://www.jsdelivr.com/package/npm/bootswatch-->
+        <!--https://bootswatch.com/lux/-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/lux/bootstrap.min.css">
+
+        <link href="/static/styles.css" rel="stylesheet">
+
+        <!-- Google fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+        <!-- FontAwesome-->
+        <script src="https://kit.fontawesome.com/c0a962ec1b.js" crossorigin="anonymous"></script>
+
+        <title>resmkr: {% block title %}{% endblock %}</title>
+
+    </head>
+
+    <body>
+        <nav class="border navbar navbar-expand-md navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">resmkr</a>
+                <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar">
+                    {% if session["user_id"] %}
+                        <ul class="navbar-nav ms-auto mt-2">
+                            <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                        </ul>
+                    {% else %}
+                        <ul class="navbar-nav ms-auto mt-2">
+                            <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        {% if get_flashed_messages() %}
+            <header>
+                <div class="alert alert-primary mb-0 text-center" role="alert">
+                    {{ get_flashed_messages() | join(" ") }}
+                </div>
+            </header>
+        {% endif %}
+
+        {{ ckeditor.load() }}
+
+        <!--MAKER-->
+
+        <div id="main" class="container py-5 mx-auto">
+            <div class="mx-auto row my-5">
+                <div class=" col-4 maker-form">
+                    <div class="m-2">
+                        <div classs="my-5" id="imageupload">
+                            <h3>Upload Image</h3>
+                            <form class="input-group mt-3  mb-5" id="imageupload" action="/mkrimgupload" method="post" enctype="multipart/form-data">
+                                <input type="file" name="file" class="form-control" id="imageData">
+                                <br>
+                                <button class="btn btn-primary text-end">Upload</button>
+                            </form>
+                        </div>
+
+                        <form id="mainform" action="/mkr" method="post">
+                            <div id="PersonalInput">
+                                <h3>Personal Details</h3>
+                                <div id="personal">
+                                    <label class="form-label">Name</label>
+                                    {% if user_details.name %}
+                                        <input autocomplete="off" value="{{ user_details.name }}" name="name" type="text" class="form-control" id="nameinput" oninput="updateOutput('nameinput', 'name')">
+                                    {% else %}
+                                        <input autocomplete="off" name="name" type="text" class="form-control" id="nameinput" oninput="updateOutput('nameinput', 'name')">
+                                    {% endif %}
+                                    <label class="form-label">Title</label>
+                                    {% if user_details.name %}
+                                        <input autocomplete="off" value="{{ user_details.job_title }}" name="job_title" type="text" class="form-control" id="titleinput" oninput="updateOutput('titleinput', 'title')">
+                                    {% else %}
+                                        <input autocomplete="off" name="job_title" type="text" class="form-control" id="titleinput" oninput="updateOutput('titleinput', 'title')">
+                                    {% endif %}
+                                    <label class="form-label">Phone no.</label>
+                                    {% if user_details.phone %}
+                                        <input autocomplete="off" value="{{ user_details.phone }}" name="phone" type="text" class="form-control" id="phoneinput" oninput="updateOutput('phoneinput', 'phone')">
+                                    {% else %}
+                                        <input autocomplete="off" name="phone" type="text" class="form-control" id="phoneinput" oninput="updateOutput('phoneinput', 'phone')">
+                                    {% endif %}
+                                    <label class="form-label">Email id</label>
+                                    {% if user_details.email %}
+                                        <input autocomplete="off" value="{{ user_details.email }}" name="email" type="text" class="form-control" id="emailinput" oninput="updateOutput('emailinput', 'email')">
+                                    {% else %}
+                                        <input autocomplete="off" name="email" type="text" class="form-control" id="emailinput" oninput="updateOutput('emailinput', 'email')">
+                                    {% endif %}
+                                    <label class="form-label">Linkdin</label>
+                                    {% if user_details.linkdin %}
+                                        <input autocomplete="off" value="{{ user_details.linkdin }}" name="linkdin" type="text" class="form-control" id="linkdininput" oninput="updateOutput('linkdininput', 'linkdin')">
+                                    {% else %}
+                                        <input autocomplete="off" name="linkdin" type="text" class="form-control" id="linkdininput" oninput="updateOutput('linkdininput', 'linkdin')">
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="my-5" id="ProfileInput">
+                                <h3>Profile</h3>
+                                {% if user_details.profile %}
+                                    <textarea autocomplete="off" id="profile" name="profile">{{ user_details.profile }}</textarea>
+                                {% else %}
+                                    <textarea autocomplete="off" id="profile" name="profile"></textarea>
+                                {% endif %}
+                            </div>
+
+                            <div class="my-5" id="WorkInput">
+                                <h3>Work Experience</h3>
+                                <h4>Job 1</h4>
+                                <label class="form-label">Job Title</label>
+                                {% if user_details.title1 %}
+                                    <input autocomplete="off" value="{{ user_details.title1 }}" name="jobtitle1input1" type="text" class="form-control" id="jobtitle1input" oninput="updateOutput('jobtitle1input', 'jobtitle1')">
+                                {% else %}
+                                    <input autocomplete="off" name="jobtitle1input1" type="text" class="form-control" id="jobtitle1input" oninput="updateOutput('jobtitle1input', 'jobtitle1')">
+                                {% endif %}
+
+
+                                <label class="form-label">Company Name</label>
+                                <input autocomplete="off" value="{{ user_details.company_name1 }}" name="companyname1" type="text" class="form-control" id="companyname1input" oninput="updateOutput('companyname1input', 'companyname1')">
+
+                                <label class="form-label">Starting Date</label>
+                                <input autocomplete="off" value="{{ user_details.starting_date1 }}" name="startingdate1" type="month" class="form-control" id="startingdate1input" oninput="updateOutput('startingdate1input', 'startingdate1')">
+
+                                <label class="form-label">Ending Date</label>
+                                <input autocomplete="off" value="{{ user_details.ending_date1 }}" name="endingdate1" type="month" class="form-control" id="endingdate1input" oninput="updateOutput('endingdate1input', 'endingdate1')">
+
+                                <label class="form-label">Discription</label>
+
+                                {% if user_details.job_discription1 %}
+                                    <textarea autocomplete="off" id="jobDiscription1input" name="jobDiscription1input">{{ user_details.job_discription1 }}</textarea>
+                                {% else %}
+                                    <textarea autocomplete="off" id="jobDiscription1input" name="jobDiscription1input"></textarea>
+                                {% endif %}
+
+                            </div>
+
+                            <button type="button" type="button" class="btn btn-primary w-100" onclick="addJob()">Add job</button>
+
+
+                            <div class="my-5" id="educationInput">
+                                <h3>Education</h3>
+                                <label class="form-label">Course/Programme</label>
+                                <input autocomplete="off" value="{{ user_details.course1 }}" name="course1" type="text" class="form-control" id="course1input" oninput="updateOutput('course1input', 'course1')">
+                                <label class="form-label">Institution</label>
+                                <input autocomplete="off" value="{{ user_details.institution1 }}" name="institution1" type="text" class="form-control" id="institution1input" oninput="updateOutput('institution1input', 'institution1')">
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" onclick="addEducation()"> + Add Education</button>
+
+
+                            <div class="my-5" id="skillsInput">
+                                <h4>Skills</h4>
+                                <label class="form-label">Skill</label>
+                                <input autocomplete="off" value="{{ user_details.skill1 }}" name="skill1" type="text" class="form-control" id="skill1input" oninput="updateOutput('skill1input', 'skill1')">
+                                <label class="form-label">Skill</label>
+                                <input autocomplete="off" value="{{ user_details.skill2 }}" name="skill2" type="text" class="form-control" id="skill2input" oninput="updateOutput('skill2input', 'skill2')">
+                                <label class="form-label">Skill</label>
+                                <input autocomplete="off" value="{{ user_details.skill3 }}" name="skill3" type="text" class="form-control" id="skill3input" oninput="updateOutput('skill3input', 'skill3')">
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" onclick="addSkill()"> + Add Skill</button>
+
+                            <div class="my-5">
+                                <div id="specialinput">
+                                    <h4>Special Section</h4>
+                                    <label class="form-label">Section Title</label>
+                                    <input autocomplete="off" value="{{ user_details.specialtitle }}" name="specialtitle" type="text" class="form-control" id="specialtitleinput" oninput="updateOutput('specialtitleinput', 'specialtitle')">
+                                    <label class="form-label">Item</label>
+                                    <input autocomplete="off" value="{{ user_details.specialitem1 }}" name="specialitem1" type="text" class="form-control" id="specialitem1input" oninput="updateOutput('specialitem1input', 'specialitem1')">
+                                    <label class="form-label">Item</label>
+                                    <input autocomplete="off" value="{{ user_details.specialitem2 }}" name="specialitem2" type="text" class="form-control" id="specialitem2input" oninput="updateOutput('specialitem2input', 'specialitem2')">
+                                </div>
+                                <button type="button" class="btn btn-primary w-100" onclick="addSpecialItem()">+ Add Item</button>
+                            </div>
+
+                            <div class="col my-5 " id="themeSelection">
+                                <h3>Theme</h3>
+                                <br>
+                                <div class="btn-group justify-content-between" role="group">
+                                    <button class="btn btn-primary mx-2" id="blue" type="button" onclick="changeTheme('blue')">O</button>
+                                    <button class="btn btn-primary mx-2" id="red" type="button" onclick="changeTheme('red')">O</button>
+                                    <button class="btn btn-primary mx-2" id="green" type="button" onclick="changeTheme('green')">O</button>
+                                    <button class="btn btn-primary mx-2" id="black" type="button" onclick="changeTheme('black')">O</button>
+                                </div>
+
+                                <input autocomplete="off" hidden id="selectedTheme" value="blue" name="selectedTheme">
+                            </div>
+
+                            <div class="my-5">
+                                <button type="submit" class=" mt-2 btn btn-success mx-auto w-100" id="savebutton">Save Data</button>
+                            </div>
+
+                            <div class="my-5">
+                                <button class=" mt-2 btn btn-danger mx-auto w-100" id="downloadbtn" onclick="downloadpdf()">Download PDF</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="col-8 resume-show">
+                    <div class="resume-layout" id="resume">
+
+                        <!--HEADER-->
+
+                        <div class="row" id="header">
+                            <div class="col-4 d-flex ">
+                                {% if user_details %}
+                                    <img id="image" class="profile-image mx-auto justify-content-center" src="static/photos/{{ 'photo' ~ user_details.user_id }}">
+                                {% else %}
+                                    {% if image in uploadedimage %}
+                                        <img id="image" class="profile-image mx-auto justify-content-center" src="static/photos/{{ image }}">
+                                    {% else %}
+                                        <img id="image" class="profile-image mx-auto justify-content-center" src="static/photos/default.jpg">
+                                    {% endif %}
+                                {% endif %}
+
+                            </div>
+                            <div class="col-6 d-flex align-item-center">
+                                <div class="name-title mt-auto pb-3">
+
+                                    {% if user_details.name %}
+                                        <h1 id="name" class="text-start mb-0">{{ user_details.name }}</h1>
+                                    {% else %}
+                                        <h1 id="name" class="text-start mb-0"> Your Name </h1>
+                                    {% endif %}
+
+                                    {% if user_details.job_title %}
+                                        <h4 id="title" class="text-start mt-0">{{ user_details.job_title }}</h4>
+                                    {% else %}
+                                        <h4 id="title" class="text-start mt-0">Title</h4>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!--SIDE BODY-->
+
+                        </div>
+                        <div class="row">
+                            <div class="col-4" id="sidebar">
+
+                                <!--Contact-->
+
+                                <div class="container py-1 pt-4 text-start">
+                                    <h3>Contact</h3>
+                                    <span class="text-start contact text-wrap">
+                                        <p class="text-wrap"><i class="fa-solid fa-phone" ;></i><b> Phone No.</b></br>
+                                            {% if user_details.phone %}
+                                                <i id="phone">{{ user_details.phone }}</i></br>
+                                            {% else %}
+                                                <i id="phone"> +91 9999999999</i></br>
+                                            {% endif %}
+
+                                            <i class="fa-solid fa-envelope" ;></i><b> Email Id.</b></br>
+                                            {% if user_details.email %}
+                                                <i id="email">{{ user_details.email }}</i></br>
+                                            {% else %}
+                                                <i id="email">youremail@example.com</i></br>
+                                            {% endif %}
+
+                                            <i class="fa-brands fa-linkedin" ;> </i><b> Linkdin Profile</b></br>
+                                            {% if user_details.linkdin %}
+                                                <i id="linkdin">{{ user_details.linkdin }}</i></br>
+                                            {% else %}
+                                                <i id="linkdin">linkdin.com/yourlinkdin</i></br>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <hr>
+
+                                <!--Education-->
+
+                                    <div class="container py-1 text-start" id="educationOutput">
+                                        <h3>Education</h3>
+                                        {% if user_details.course1 %}
+                                            <h6 id="course1">{{ user_details.course1  }}</h6>
+                                        {% else %}
+                                            <h6 id="course1">Course/Programme</h6>
+                                        {% endif %}
+                                        {% if user_details.institution1 %}
+                                            <p id="institution1">{{ user_details.institution1 }}</p>
+                                        {% else %}
+                                            <p id="institution1">Institution</p>
+                                        {% endif %}
+                                    </div>
+                                    <hr>
+
+
+                                <!--Skills-->
+
+                                    <div class="container py-1 text-start" id="skillsOutput">
+                                        <h3>Skills</h3>
+                                        {% if user_details.skill1 %}
+                                            <li id="skill1">{{ user_details.skill1 }}</li>
+                                        {% else %}
+                                            <li id="skill1">Skill</li>
+                                        {% endif %}
+                                        {% if user_details.skill2 %}
+                                            <li id="skill2">{{ user_details.skill2 }}</li>
+                                        {% else %}
+                                            <li id="skill2">Skill</li>
+                                        {% endif %}
+                                        {% if user_details.skill3 %}
+                                            <li id="kill3">{{ user_details.skill3 }}</li>
+                                        {% else %}
+                                            <li id="skill3">Skill</li>
+                                        {% endif %}
+                                    </div>
+                                    <hr>
+
+                                <!--Special-->
+                                    <div class="container py-1 text-start" id="specialcontainer">
+                                        {% if user_details.specialtitle %}
+                                            <h3 id="specialtitle">{{ user_details.specialtitle }}</h3>
+                                        {% else %}
+                                            <h3 id="specialtitle">Special Title</h3>
+                                        {% endif %}
+
+                                        {% if user_details.specialitem1 %}
+                                            <li id="specialitem1">{{ user_details.specialitem1 }}</li>
+                                        {% else %}
+                                            <li id="specialitem1">Special Item</li>
+                                        {% endif %}
+
+                                        {% if user_details.specialitem2 %}
+                                            <li id="specialitem2">{{ user_details.specialitem2 }}</li>
+                                        {% else %}
+                                            <li id="specialitem2">Special Item</li>
+                                        {% endif %}
+                                    </div>
+
+                                <!--MAIN BODY-->
+
+                                </div>
+                                <div class="col-8" id="mainbody">
+
+                                <!--PROFILE-->
+
+                                    <div class="container py-2 pt-4 text-start profile">
+                                        <h3>Profile</h3>
+                                        <p id="profileDEFAULT">
+                                            {% if user_details.profile  %}
+                                                <p id="profileoutput">{{ user_details.profile }}</p>
+                                            {% else %}
+                                                <p id="profileoutput">
+                                                    In the profile section of your resume, concisely highlight your key qualifications, skills, and achievements. Craft a compelling summary that showcases your professional identity and emphasizes your unique strengths. Tailor the content to align with the specific job you're applying for, providing a snapshot of your expertise and value proposition to capture the employer's attention.</p>
+                                            {% endif %}
+                                        </div>
+                                        <hr>
+
+                                <!--WORK EXPERIENCE-->
+                                        <div class="container py-2 text-start work" id="workOutput">
+                                            <h3>Work Experience</h3>
+                                            <br>
+                                            {% if user_details.title1 %}
+                                                <h4 id="jobtitle1">{{ user_details.title1 }}</h4>
+                                            {% else %}
+                                                <h4 id="jobtitle1">Job Title</h4>
+                                            {% endif %}
+
+                                            {% if user_details.company_name1 %}
+                                                <h5 id="companyname1">{{ user_details.company_name1 }}</h5>
+                                            {% else %}
+                                                <h5 id="companyname1">Company Name</h5>
+                                            {% endif %}
+
+                                            {% if user_details.starting_date1 and user_details.starting_date1 %}
+                                                <span><b id="startingdate1">{{ convert_date(user_details.starting_date1) }}</b> - <b id="endingdate1">{{ convert_date(user_details.ending_date1) }}</b></span>
+                                            {% else %}
+                                                <span><b id="startingdate1">Month, Year</b> - <b id="endingdate1">Month, Year</b></span>
+                                            {% endif %}
+
+
+                                            <div class="mt-2">
+                                                {% if user_details.job_discription1  %}
+                                                    <p id="jobDiscription1Output">{{ user_details.job_discription1 }}</p>
+                                                {% else %}
+                                                    <p id="jobDiscription1Output">Crafting a compelling job description on your resume involves highlighting key responsibilities, achievements, and skills. Begin each point with a strong action verb to convey a sense of accomplishment. For instance, start with words like Led, Developed, or Managed. Quantify achievements whenever possible, using metrics or percentages to showcase impact. Tailor each description to emphasize skills relevant to the desired role. Consider incorporating keywords from the job posting to enhance alignment with employer expectations. Lastly, maintain clarity and brevity to ensure readability.</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <footer class="mb-5 small text-center text-muted">
+                        </footer>
+
+
+                        <script>
+                    // CURRENT JS CODE IS VERY LARGE. DIDN'T HAD TIME TO SIMPLIFY IT AND MAKE IT CLEAN. WILL BE DOING IT SOON AFTER SUBMISSION!
+
+
+
+                    // Add new Work Experience
+                            var noOfJob = 2
+
+                            function addJob() {
+
+                                noOfJob++;
+
+                        //Create Input
+                                var inputContainer = document.getElementById('WorkInput');
+
+                                var inputJobTitleLabel = document.createElement('label');
+                                inputJobTitleLabel.className = "form-label";
+                                inputJobTitleLabel.innerHTML = 'Job Title';
+                                inputJobTitleLabel.id = 'inputjobtitlelabel' + noOfJob;
+
+                                var inputJobTitleInput = document.createElement('Input');
+                                inputJobTitleInput.id = 'jobtitle' + noOfJob + 'input';
+                                inputJobTitleInput.name = 'jobtitle' + noOfJob + 'input';
+                                inputJobTitleInput.className = "form-control";
+                                inputJobTitleInput.value = '{{ user_details.jobtitle2 }}'; // hack to make it work with only 1 more job
+
+
+                                var inputCompanyNameLabel = document.createElement('label');
+                                inputCompanyNameLabel.className = "form-label";
+                                inputCompanyNameLabel.innerHTML = 'Company Name'
+                                inputCompanyNameLabel.id = 'inputcompanynamelabel' + noOfJob;
+
+                                var inputCompanyNameInput = document.createElement('Input');
+                                inputCompanyNameInput.id = 'companyname' + noOfJob + 'input';
+                                inputCompanyNameInput.name = 'companyname' + noOfJob + 'input';
+                                inputCompanyNameInput.className = "form-control";
+                                inputCompanyNameInput.value = '{{ user_details.companyname2 }}';
+
+
+                                var inputStartingDateLabel = document.createElement('label');
+                                inputStartingDateLabel.className = "form-label";
+                                inputStartingDateLabel.innerHTML = 'Starting Date'
+                                inputStartingDateLabel.id = 'startingdatelabel' + noOfJob;
+
+                                var inputStartingDateInput = document.createElement('Input');
+                                inputStartingDateInput.id = 'startingdate' + noOfJob + 'input';
+                                inputStartingDateInput.name = 'startingdate' + noOfJob + 'input';
+                                inputStartingDateInput.className = "form-control";
+                                inputStartingDateInput.value = '{{ user_details.startingdate2 }}';
+
+
+                                var inputEndingDateLabel = document.createElement('label');
+                                inputEndingDateLabel.className = "form-label";
+                                inputEndingDateLabel.innerHTML = 'Ending Date';
+                                inputEndingDateLabel.id = 'endingdatelabel' + noOfJob;
+
+                                var inputEndingDateInput = document.createElement('Input');
+                                inputEndingDateInput.id = 'endingdate' + noOfJob + 'input';
+                                inputEndingDateInput.name = 'endingdate' + noOfJob + 'input';
+                                inputEndingDateInput.className = "form-control";
+                                inputEndingDateInput.value = '{{ user_details.endingdate2 }}';
+
+
+                                var inputDiscriptionLabel = document.createElement('label');
+                                inputDiscriptionLabel.className = "form-label";
+                                inputDiscriptionLabel.innerHTML = 'Discription'
+                                inputDiscriptionLabel.id = 'discriptionlabel' + noOfJob;
+
+                                var inputDiscriptionInput = document.createElement('textarea');
+                                inputDiscriptionInput.id = 'jobdiscription' + noOfJob + 'input';
+                                inputDiscriptionInput.name = 'jobdiscription' + noOfJob + 'input';
+                                inputDiscriptionInput.className = "form-control";
+                                inputDiscriptionInput.value = '{{ user_details.jobdiscription2 }}';
+
+                                var addbreak = document.createElement("br");
+                                addbreak.id = "addbreak" + noOfJob;
+
+
+                        // Delete Button
+                                var newWorkDelete = document.createElement("button");
+                                newWorkDelete.id = "workdelete" + noOfJob;
+                                newWorkDelete.className = "btn btn-danger mt-3 w-100";
+                                newWorkDelete.type = "button";
+                                newWorkDelete.innerHTML = "X";
+
+                                inputContainer.appendChild(addbreak)
+                                inputContainer.appendChild(inputJobTitleLabel)
+                                inputContainer.appendChild(inputJobTitleInput)
+                                inputContainer.appendChild(inputCompanyNameLabel)
+                                inputContainer.appendChild(inputCompanyNameInput)
+                                inputContainer.appendChild(inputStartingDateLabel)
+                                inputContainer.appendChild(inputStartingDateInput)
+                                inputContainer.appendChild(inputEndingDateLabel)
+                                inputContainer.appendChild(inputEndingDateInput)
+                                inputContainer.appendChild(inputDiscriptionInput)
+                                inputContainer.appendChild(newWorkDelete)
+
+
+                        //Create Output
+                                var outputContainer = document.getElementById('workOutput');
+
+                                var outputJobTitle = document.createElement('h5');
+                                outputJobTitle.id = 'jobtitle' + noOfJob;
+
+
+                                var outputCompanyName = document.createElement('h6');
+                                outputCompanyName.id = 'companyname' + noOfJob;
+
+
+                                var outputDateSpan = document.createElement('span');
+                                outputDateSpan.id = 'span' + noOfJob;
+
+                                var outputStartDate = document.createElement('i');
+                                outputStartDate.id = 'startingdate' + noOfJob;
+
+                                var outputEndDate = document.createElement('i');
+                                outputEndDate.id = 'endingdate' + noOfJob;
+
+                                var outputDiscription = document.createElement('p');
+                                outputDiscription.id = "jobdiscription" + noOfJob;
+
+                                var hiphen = document.createElement('i');
+                                hiphen.innerHTML = ' - ';
+
+                                outputDateSpan.appendChild(outputStartDate);
+                                outputDateSpan.appendChild(hiphen);
+                                outputDateSpan.appendChild(outputEndDate);
+
+                                outputContainer.appendChild(outputJobTitle);
+                                outputContainer.appendChild(outputCompanyName);
+                                outputContainer.appendChild(outputDateSpan);
+                                outputContainer.appendChild(outputDiscription);
+
+
+                        // Taking input and showing on output for text
+
+                                inputJobTitleInput.addEventListener("input", function() {
+                                    updateOutput(inputJobTitleInput.id, outputJobTitle.id);
+                                });
+
+                                inputCompanyNameInput.addEventListener("input", function() {
+                                    updateOutput(inputCompanyNameInput.id, outputCompanyName.id);
+                                });
+
+                                inputStartingDateInput.addEventListener("input", function() {
+                                    updateOutput(inputStartingDateInput.id, outputStartDate.id);
+                                });
+
+                                inputEndingDateInput.addEventListener("input", function() {
+                                    updateOutput(inputEndingDateInput.id, outputEndDate.id);
+                                });
+
+
+
+                                CKEDITOR.replace(inputDiscriptionInput.id);
+                                var inputDiscriptioneditorInstance = CKEDITOR.instances[inputDiscriptionInput.id];
+
+                                inputDiscriptioneditorInstance.on('change', function() {
+                                    var inputDiscriptioncurrentContent = inputDiscriptioneditorInstance.getData();
+                                    document.getElementById(outputDiscription.id).innerHTML = inputDiscriptioncurrentContent;
+                                });
+
+
+
+                        // Delete button function
+
+                                newWorkDelete.onclick = function() {
+                                    deleteItem(inputJobTitleLabel.id, inputCompanyNameLabel.id, outputDiscription.id, outputDateSpan.id, outputCompanyName.id, outputJobTitle.id,
+                                        inputEndingDateInput.id, inputDiscriptionInput.id, inputDiscriptionLabel.id,
+                                        inputStartingDateInput.id, inputStartingDateInput.id, inputStartingDateLabel.id, inputEndingDateLabel.id, inputCompanyNameInput.id,
+                                        inputJobTitleInput.id, newWorkDelete.id, addbreak.id);
+
+                                    noOfJob--;
+
+                                    if (inputDiscriptioneditorInstance) {
+                                        inputDiscriptioneditorInstance.destroy();
+                                    }
+
+                                };
+
+
+
+                            }
+
+
+
+                    // Add Education
+                            var educationNumber = 2;
+
+                            function addEducation() {
+
+                        // label
+                                var newEducationCourseLabel = document.createElement("label");
+                                newEducationCourseLabel.id = "educationcourselabel" + educationNumber;
+                                newEducationCourseLabel.className = "form-label";
+                                newEducationCourseLabel.innerHTML = "Course";
+
+                                var newEducationInstitutionLabel = document.createElement("label");
+                                newEducationInstitutionLabel.id = "educationinstitutionlabel" + educationNumber;
+                                newEducationInstitutionLabel.className = "form-label";
+                                newEducationInstitutionLabel.innerHTML = "Institution";
+
+                        // Input
+                                var newEducationCourseInput = document.createElement("input");
+                                newEducationCourseInput.id = "educationcourseinput" + educationNumber;
+                                newEducationCourseInput.className = "form-control"
+                                newEducationCourseInput.type = "text";
+
+                                var newEducationInstitutionInput = document.createElement("input");
+                                newEducationInstitutionInput.id = "educationinstitutioninput" + educationNumber;
+                                newEducationInstitutionInput.className = "form-control"
+                                newEducationInstitutionInput.type = "text";
+
+
+                        // Delete Button
+                                var newEducationDelete = document.createElement("button");
+                                newEducationDelete.id = "educationdelete" + educationNumber;
+                                newEducationDelete.className = "btn btn-danger mt-3 w-100";
+                                newEducationDelete.type = "button";
+                                newEducationDelete.innerHTML = "X";
+
+
+                        // Output
+                                var newEducationCourseOutput = document.createElement("h6");
+                                newEducationCourseOutput.id = "educationcourseoutput" + educationNumber;
+
+
+                                var newEducationInstitutionOutput = document.createElement("p");
+                                newEducationInstitutionOutput.id = "educationinstitutionoutput" + educationNumber;
+
+                        // Appending Inputs and Output to desired containers
+                                var EducationOutputContainer = document.getElementById("educationOutput");
+                                EducationOutputContainer.appendChild(newEducationCourseOutput);
+                                EducationOutputContainer.appendChild(newEducationInstitutionOutput);
+
+                                var addbreak = document.createElement("br");
+                                addbreak.id = "addbreak" + educationNumber;
+
+                                var EducationInputContainer = document.getElementById("educationInput");
+                                EducationInputContainer.appendChild(newEducationCourseLabel);
+                                EducationInputContainer.appendChild(newEducationCourseInput);
+                                EducationInputContainer.appendChild(newEducationInstitutionLabel);
+                                EducationInputContainer.appendChild(newEducationInstitutionInput);
+                                EducationInputContainer.appendChild(newEducationDelete);
+                                EducationInputContainer.appendChild(addbreak);
+
+
+                        // Update on input function
+
+                                newEducationCourseInput.addEventListener("input", function() {
+                                    updateOutput(newEducationCourseInput.id, newEducationCourseOutput.id);
+                                });
+
+                                newEducationInstitutionInput.addEventListener("input", function() {
+                                    updateOutput(newEducationInstitutionInput.id, newEducationInstitutionOutput.id);
+                                });
+
+                        // Delete button function
+
+                                newEducationDelete.onclick = function() {
+                                    deleteItem(newEducationCourseOutput.id, newEducationInstitutionOutput.id, newEducationCourseLabel.id, newEducationCourseInput.id, newEducationInstitutionLabel.id, newEducationInstitutionInput.id, addbreak.id, newEducationDelete.id, educationNumber);
+                                };
+
+                                educationNumber++;
+
+                            }
+
+                    // Add Speecial Item
+                            var specialItemnumber = 3;
+
+                            function addSpecialItem() {
+
+                        // label
+                                var newSpeicalItemLabel = document.createElement("label");
+                                newSpeicalItemLabel.id = "specialitemlabel" + specialItemnumber;
+                                newSpeicalItemLabel.className = "form-label";
+                                newSpeicalItemLabel.innerHTML = "Item";
+
+
+                        // Input
+                                var newSpeicalItemInput = document.createElement("input");
+                                newSpeicalItemInput.id = "specialiteminput" + specialItemnumber;
+                                newSpeicalItemInput.className = "form-control"
+                                newSpeicalItemInput.type = "text";
+
+
+                        // Delete Button
+                                var newSpeicalItemDelete = document.createElement("button");
+                                newSpeicalItemDelete.id = "specialitemdelete" + specialItemnumber;
+                                newSpeicalItemDelete.className = "btn btn-danger";
+                                newSpeicalItemDelete.type = "button";
+                                newSpeicalItemDelete.innerHTML = "X";
+
+
+                        // Input Group
+                                var newSpeicalItemInputGroup = document.createElement("div");
+                                newSpeicalItemInputGroup.id = "specialiteminputgroup" + specialItemnumber;
+                                newSpeicalItemInputGroup.className = "input-group mb-3";
+                                newSpeicalItemInputGroup.appendChild(newSpeicalItemInput);
+                                newSpeicalItemInputGroup.appendChild(newSpeicalItemDelete);
+
+                        // Output
+                                var newSpecialItemOutput = document.createElement("li");
+                                newSpecialItemOutput.id = "specialitem" + specialItemnumber;
+
+                        // Appending Inputs and Output to desired containers
+                                var specialOutputContainer = document.getElementById("specialcontainer");
+                                specialOutputContainer.appendChild(newSpecialItemOutput);
+
+                                var specialInputContainer = document.getElementById("specialinput");
+                                specialInputContainer.appendChild(newSpeicalItemLabel);
+                                specialInputContainer.appendChild(newSpeicalItemInputGroup);
+
+                        // Delete button function
+
+                                newSpeicalItemInput.addEventListener("input", function() {
+                                    updateOutput(newSpeicalItemInput.id, newSpecialItemOutput.id);
+                                });
+
+                                newSpeicalItemDelete.onclick = function() {
+                                    deleteItem(newSpeicalItemInputGroup.id, newSpecialItemOutput.id, newSpeicalItemLabel.id, specialItemnumber);
+                                };
+
+                                specialItemnumber++;
+
+                            }
+
+                    // Add New Skills
+                            var skillnumber = 4;
+
+                            function addSkill() {
+
+                                var newSkillInputLabel = document.createElement("label");
+                                newSkillInputLabel.innerHTML = "Skill ";
+                                newSkillInputLabel.id = "skill" + skillnumber + "label";
+                                newSkillInputLabel.className = "form-label";
+
+                                var newSkillInput = document.createElement("input");
+                                newSkillInput.type = "text"
+                                newSkillInput.className = "form-control"
+                                newSkillInput.id = "skill" + skillnumber + "input";
+
+                                var newSkillInputDelete = document.createElement("button");
+                                newSkillInputDelete.id = "deletebtn" + skillnumber;
+                                newSkillInputDelete.className = "btn btn-danger";
+                                newSkillInputDelete.type = "button";
+                                newSkillInputDelete.innerHTML = "X";
+
+                                var newSkillInputGroup = document.createElement("div");
+                                newSkillInputGroup.id = "newSkillInputGroup" + skillnumber;
+                                newSkillInputGroup.className = "input-group mb-3";
+                                newSkillInputGroup.appendChild(newSkillInput);
+                                newSkillInputGroup.appendChild(newSkillInputDelete);
+
+                                var container1 = document.getElementById("skillsInput");
+                                container1.appendChild(newSkillInputLabel);
+                                container1.appendChild(newSkillInputGroup);
+
+                                var newSkillOutput = document.createElement("li");
+                                newSkillOutput.id = "skill" + skillnumber;
+
+                                var container2 = document.getElementById("skillsOutput");
+                                container2.appendChild(newSkillOutput);
+
+                                newSkillInput.addEventListener("input", function() {
+                                    updateOutput(newSkillInput.id, newSkillOutput.id);
+                                });
+
+                                newSkillInputDelete.onclick = function() {
+                                    deleteItem(newSkillInputGroup.id, newSkillOutput.id, newSkillInputLabel.id, skillnumber);
+                                };
+
+                                skillnumber++;
+
+                            }
+                    // Add new Work Experience
+
+
+
+
+                    // Delete Created item
+                    // takes elements to delete when clicking a delete button of a group of elements create using js.
+                    // last item should be a counter variable (arguments[arguments.length - 1])
+                            function deleteItem() {
+                                for (var i = 0; i < (arguments.length - 1); i++) {
+                                    var element = document.getElementById(arguments[i]);
+                                    if (element) {
+                                        element.remove();
+                                    }
+                                }
+                                arguments[arguments.length - 1]--;
+                            }
+
+                    // Taking data (input) from text inputs and displaying on the desired innerHTML (show).
+                            function updateOutput(input, show) {
+                                var xInput = document.getElementById(input).value;
+                                var x = document.getElementById(show);
+                                x.textContent = xInput;
+                            }
+
+
+                            function downloadpdf() {
+                        // Trigger the print
+                                window.print();
+
+                            }
+
+                    // Getting Data from CKEditor and displaying on the desired innerHTML
+
+                    // Profile
+
+                            CKEDITOR.replace('profile', {
+                                value: '{{ user_details.profile }}'
+
+                            });
+                            var profileCkeditor = CKEDITOR.instances['profile'];
+                            profileCkeditor.on('change', function() {
+                                var profileCurrentContent = profileCkeditor.getData();
+                                document.getElementById('profileoutput').innerHTML = profileCurrentContent;
+                            });
+
+                    // I have realised that in the initial loading the output shows the tags as tags and doesnt get formatted
+                    // According to the tags, but on typing on it (on change) it updates itself and the tags function as tags
+                    // So here i am firing a 'on change' using the line of code below and that changes to the desired result automatically!
+                    // ALSO ICNLUDES another hack to display default profile paragraph to user when he logs in.
+                    // Which is an after effect of the above mentioned 'fire' hack. :D
+
+                            defaultProfile = document.getElementById('profileoutput')
+                            if (defaultProfile.innerText !== "In the profile section of your resume, concisely highlight your key qualifications, skills, and achievements. Craft a compelling summary that showcases your professional identity and emphasizes your unique strengths. Tailor the content to align with the specific job you're applying for, providing a snapshot of your expertise and value proposition to capture the employer's attention.") {
+                                profileCkeditor.fire('change');
+                            }
+
+                    // Job Discription 1 Input
+
+                            CKEDITOR.replace('jobDiscription1input', {
+                                value: '{{ user_details.job_discription1 }}'
+
+                            });
+
+                            var jobDiscription1CkEditor = CKEDITOR.instances['jobDiscription1input'];
+                            jobDiscription1CkEditor.on('change', function() {
+                                var jobDiscription1currentContent = jobDiscription1CkEditor.getData();
+                                document.getElementById('jobDiscription1Output').innerHTML = jobDiscription1currentContent;
+                            });
+
+
+                            defaultJobDiscription = document.getElementById('jobDiscription1Output')
+                            if (defaultJobDiscription.innerText !== "Crafting a compelling job description on your resume involves highlighting key responsibilities, achievements, and skills. Begin each point with a strong action verb to convey a sense of accomplishment. For instance, start with words like Led, Developed, or Managed. Quantify achievements whenever possible, using metrics or percentages to showcase impact. Tailor each description to emphasize skills relevant to the desired role. Consider incorporating keywords from the job posting to enhance alignment with employer expectations. Lastly, maintain clarity and brevity to ensure readability.") {
+                                jobDiscription1CkEditor.fire('change');
+                            }
+
+                    // Instead of changing the styles for header, siderbar and main body, that too with 4 different colors, so 4 different if statements
+                    // we would again just trigger a button click '.click()' for the selected color that would be stoed in our db.
+
+                            var selectedThemeButton = document.getElementById('{{ user_details.theme }}')
+                            selectedThemeButton.click()
+
+                    // Change Theme
+
+                            function changeTheme(color) {
+
+                                header = document.getElementById('header');
+                                sidebar = document.getElementById('sidebar');
+                                mainbody = document.getElementById('mainbody');
+
+                                if (color == 'blue') {
+                                    header.style.backgroundColor = 'rgb(66, 72, 116)';
+                                    sidebar.style.backgroundColor = 'rgb(220, 214, 247)';
+                                    mainbody.style.backgroundColor = 'rgb(244, 238, 255)';
+                                } else if (color == 'black') {
+                                    header.style.backgroundColor = 'rgb(82, 97, 107)';
+                                    sidebar.style.backgroundColor = 'rgb(201, 214, 223)';
+                                    mainbody.style.backgroundColor = 'rgb(240, 245, 249)';
+                                } else if (color == 'red') {
+                                    header.style.backgroundColor = 'rgb(209, 77, 114)';
+                                    sidebar.style.backgroundColor = 'rgb(255, 209, 218)';
+                                    mainbody.style.backgroundColor = 'rgb(255, 240, 245)';
+                                } else if (color == 'green') {
+                                    header.style.backgroundColor = 'rgb(87, 125, 94)';
+                                    sidebar.style.backgroundColor = 'rgb(192, 214, 191)';
+                                    mainbody.style.backgroundColor = 'rgb(224, 235, 223)';
+                                }
+
+                        // To post the selection to server we make a hidden form and change the value
+                        // according to the selection.
+                                document.getElementById('selectedTheme').value = color;
+
+
+                            };
+                        </script>
+                    </body>
+
+                </html>
