@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+
+    </head>
+
+    <body>
+        <div class="header">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+                <!-- TODO: Add multiple choice question here -->
+                <h3>Which club has won the most Champions League Titles?</h3>
+                <button class="correct">Real Madrid</button>
+                <button class="incorrect">AC Milan</button>
+                <button class="incorrect">Manchester City</button>
+                <h2 id="result"></h2>
+            </div>
+
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+                <!-- TODO: Add free response question here -->
+                <h3>How many Champions League titles have Cristiano Ronaldo won? (As of 2023)</h3>
+                <form>
+                    Answer (in digits) : <input autocomplete="off" id="ans" name="answer" type="text" />
+                    <button id="fr_button">Submit</button>
+                </form>
+                <h2 id="fr_result"></h2>
+            </div>
+        </div>
+        <script>
+            // check answers to questions after everything has loaded
+            document.addEventListener('DOMContentLoaded', function() {
+
+                // for correct
+                let mcq_cor_ans = document.querySelector('.correct');
+                mcq_cor_ans.addEventListener('click', function() {
+                    mcq_cor_ans.style.backgroundColor = 'rgb(96, 153, 102)';
+
+                    document.querySelector('#result').innerHTML = 'Correct';
+                    document.querySelector('#result').style.color = 'rgb(96, 153, 102)';
+
+                })
+
+
+                // for incorrect
+                let mcq_incor_ans = document.querySelectorAll('.incorrect');
+                mcq_incor_ans.forEach(function(incorrect_element) {
+                    incorrect_element.addEventListener('click', function() {
+                        incorrect_element.style.backgroundColor = 'rgb(226, 62, 87)';
+
+                        document.querySelector('#result').innerHTML = 'Incorrect';
+                        document.querySelector('#result').style.color = 'rgb(226, 62, 87)';
+
+
+                    })
+                });
+
+                // checking free response answer
+                document.querySelector('form').addEventListener('submit', function(event) {
+
+                    event.preventDefault();
+
+                    let fr_answer = document.querySelector('#ans').value;
+                    let fr_ans = document.querySelector('#fr_result');
+
+                    if (fr_answer === '5') {
+                        fr_ans.innerHTML = 'Correct';
+                        fr_ans.style.color = 'rgb(96, 153, 102)';
+                    } else {
+                        fr_ans.innerHTML = 'Incorrect';
+                        fr_ans.style.color = 'rgb(226, 62, 87)';
+                    }
+                });
+            });
+        </script>
+    </body>
+
+</html>
