@@ -1,0 +1,98 @@
+#include <cs50.h>
+#include <stdio.h>
+
+long get_number(void);
+int check_sum(long number);
+void card_name(int sum, long number);
+
+int main(void)
+{
+    // Prompt user for a card number
+    long number = get_number();
+    // Checksum
+    int sum = check_sum(number);
+    // Print Card Name or Invalid
+    card_name(sum, number);
+}
+
+long get_number(void)
+{
+    long n = 0;
+    n = get_long("Number: ");
+
+    return n;
+}
+
+int check_sum(long number)
+{
+    long o;
+    long p;
+    long mod1 = 100;
+    long div1 = 10;
+    long mod2 = 10;
+    long div2 = 1;
+    int s = 0;
+
+    // CHECKSUM
+    for (int i = 0; i < 8; i++)
+    {
+        // To get second last digit
+        o = number % mod1;
+        o = o / div1;
+
+        // To get alternative digits
+        mod1 = mod1 * 100;
+        div1 = div1 * 100;
+
+        o = o * 2;
+
+        // If single digit
+        if (o < 10)
+        {
+            s = s + o;
+        }
+
+        // If double digits, converting to single digit
+        else if (o > 9)
+        {
+            s = s + (o % 10) + (o / 10);
+        }
+
+        // To get last digit
+        p = number % mod2;
+        p = p / div2;
+
+        // To get alternative digits
+        mod2 = mod2 * 100;
+        div2 = div2 * 100;
+
+        // sum
+        s = s + p;
+    }
+
+    s = s % 10;
+    return s;
+}
+
+void card_name(int sum, long number)
+{
+    // Checksum passed
+    if (sum == 0)
+    {
+        // To determine number of digits
+        long n = number / 1000000000000;
+
+        if ((n < 10 && n == 4) || (n > 999 && n / 1000 == 4))
+            printf("VISA\n");
+        else if ((n > 99 && n < 1000 && n / 10 == 34) || (n > 99 && n < 1000 && n / 10 == 37))
+            printf("AMEX\n");
+        else if (n > 999 && n / 100 < 56 && n / 100 > 50)
+            printf("MASTERCARD\n");
+        else
+            printf("INVALID\n");
+    }
+    // Checksum failed
+    else
+        printf("INVALID\n");
+
+}

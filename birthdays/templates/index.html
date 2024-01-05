@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="/static/styles.css" rel="stylesheet">
+        <title>Birthdays</title>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Birthdays</h1>
+        </div>
+        <div class="container">
+            <div class="section">
+                <h2>Add a Birthday</h2>
+                <!-- TODO: Create a form for users to submit a name, a month, and a day -->
+                <form action="/" method="post">
+                    <input type="text" name="name" placeholder="Name" autocomplete=off required=yes>
+                    <input type="number" name="month" placeholder="Month" min="1" max="12" required=yes>
+                    <input type="number" name="day" placeholder="Day" min="1" max="31" required=yes>
+
+                    <button>Add</button>
+
+                </form>
+            </div>
+
+            <div class="section">
+
+                <h2>All Birthdays</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="na" class="name-col"> Name </th>
+                            <th class="bday-col"> Birthday </th>
+                            <th class="delete"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- TODO: Loop through the database entries to display them in this table -->
+                        {% for row in birthdays %}
+                        <tr>
+                            <td class="name-col">{{ row.name }}</td>
+                            <td class="bday-col">{{ row.month }} / {{ row.day }} </td>
+                            <td class="delete">
+                                <form action="/delete" method="POST">
+                                    <input name="id" type="hidden" value="{{ row.id }}">
+                                    <button onmouseover="delHighlightBefore(event);" onmouseout="delHighlightAfter(event);" id="delete-button" type="submit">X</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script>
+
+            var defaultColor;
+
+            function delHighlightBefore() {
+                triggerObject = event.srcElement;
+                defaultColor = window.getComputedStyle(triggerObject.parentNode.parentNode.parentNode).backgroundColor;
+
+                triggerObject.parentNode.parentNode.parentNode.style.backgroundColor =  '#e06377';
+            }
+
+            function delHighlightAfter() {
+                triggerObject = event.srcElement;
+                triggerObject.parentNode.parentNode.parentNode.style.backgroundColor = defaultColor;
+            }
+        </script>
+
+
+    </body>
+</html>
